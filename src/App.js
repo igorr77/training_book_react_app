@@ -68,7 +68,6 @@ const GenreList = () => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        //fetch('https://jsonplaceholder.typicode.com/users')
         fetch('http://localhost:8080/genre/list')
             .then(res => res.json())
             .then(data => {
@@ -90,13 +89,18 @@ const GenreList = () => {
                     items.map(p => (
                         <tr>
                             <td>{p.id}</td>
-                            <td>{p.name}</td>
+                            <td>
+                                <Link to={`/genre/${p.id}`}>{p.name}</Link>
+                            </td>
                             <td>{p.description}</td>
                         </tr>
                     ))
                 }
                 </tbody>
             </table>
+            <p>
+                <Link to='/genre/$0'>Add</Link>
+            </p>
             <p>
                 <Link to='/'>Back</Link>
             </p>
@@ -114,8 +118,9 @@ const Genre = props => {
 
     return (
         <article>
-            <h1>{fakeInfo.name} ({fakeInfo.username})</h1>
-            <h2>Some info: {fakeInfo.description}</h2>
+            <h3>{fakeInfo.name} ({fakeInfo.username})</h3>
+            <h3>Some info: {fakeInfo.description}</h3>
+            <h2>{props.match.params.id}</h2>
             <Link to='/genre'>Back</Link>
         </article>
 
