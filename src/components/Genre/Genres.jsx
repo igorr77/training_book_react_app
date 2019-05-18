@@ -14,6 +14,4 @@ const Genres = () => (
   </section>
 )
 
-// <!--Link to={'/genre/${p.id}'}>{p.name}</Link-->
-
 export default Genres;

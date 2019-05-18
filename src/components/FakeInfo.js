@@ -14,8 +14,8 @@ export const GenreFakeInfo = [
 
 export const BookFakeInfo = [
   {"id":"B1", "title":"BookTitle1", "genre":"G1", "authorList":[{"id":"A1"}, {"id":"A2"}], "noteList":[{"id":"B1N1","text":"NoteText1"},{"id":"B1N2","text":"NoteText2"}], "description":"BookDescription1"},
-  {"id":"B2", "title":"BookTitle2", "genre":"G2", "authorList":[{"id":"A2"}, {"id":"A3"}], "noteList":[{"id":"B2N1","text":"NoteText1"},{"id":"B2N2","text":"NoteText2"}], "description":"BookDescription2"},
-  {"id":"B2", "title":"BookTitle2", "genre":"G3", "authorList":[{"id":"A3"}, {"id":"A1"}], "noteList":[{"id":"B3N1","text":"NoteText1"},{"id":"B3N2","text":"NoteText2"}], "description":"BookDescription3"}
+  {"id":"B2", "title":"BookTitle2", "genre":"G2", "authorList":[{"id":"A2"}, {"id":"A3"}], "noteList":[{"id":"B2N1","text":"NoteText1"},{"id":"B2N2","text":"NoteText2"}, {"id":"B2N3","text":"NoteText3"}], "description":"BookDescription2"},
+  {"id":"B3", "title":"BookTitle2", "genre":"G3", "authorList":[{"id":"A3"}, {"id":"A1"}], "noteList":[{"id":"B3N1","text":"NoteText1"}], "description":"BookDescription3"}
 ]
 
 // f()

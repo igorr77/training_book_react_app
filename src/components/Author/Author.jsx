@@ -8,7 +8,7 @@ const Author = ({history, match:{params}}) => {
   return (
     <article>
       {params.id === "0" && <AuthorAdd history={history}/>}
-      {params.id != "0" && <AuthorView info={params} history={history}/>}
+      {params.id !== "0" && <AuthorView info={params} history={history}/>}
       <p />
 
     </article>

@@ -1,46 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import '../../App.css';
-import { AuthorFakeInfo, GenreFakeInfo, findById } from '../FakeInfo';
+import {AuthorFakeInfo, findById} from '../FakeInfo';
 
 
-const AuthorView = ({ info, history }) => {
+const AuthorView = ({info, history}) => {
 
-  // fake info
-  const getFakeAuthor = (id) => {
-    return findById(AuthorFakeInfo, id);
-  }
+    // fake info
+    const getFakeAuthor = (id) => {
+        return findById(AuthorFakeInfo, id);
+    }
+
+    //
+    const [author, setAuthor] = useState({});
+    const [genre, setGenre] = useState({});
+
+    const urlAuthor = 'http://localhost:8080/author/';
+    const urlGenre = 'http://localhost:8080/genre/';
+    useEffect(() => {
+        fetch(urlAuthor + info.id)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setAuthor(data);
+                return data.genreList[0].id;
+            })
+            .then((id) => {
+                console.log("genreId"+id);
+                if (id !== null) {
+                    fetch(urlGenre + id)
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data);
+                            setGenre(data);
+                        })
+                }
+            })
+
+    }, []);
 
 
-  //
+    const refBack = () => {
+        history.goBack();
+    }
 
-  const getGenreById = (id) => {
-    return findById(GenreFakeInfo, id);
-  }
-
-
-  const getAuthor = (id) => {
-    return getFakeAuthor(id);
-  }
-
-  const refBack = () => {
-    history.goBack();
-  }
-
-  //<p>GENRE:{getGenreById(getAuthor(info.id).genrelist[0].id)}</p>
-
-  return (
-    <article>
-      <p>VIEW:</p>
-      <p>ID: {info.id}</p>
-      <label class="App-view-item">FIRSTNAME: </label> {getAuthor(info.id).firstname} <p />
-      <label class="App-view-item">SURNAME: </label> {getAuthor(info.id).surname} <p />
-      <label class="App-view-item">LASTNAME: </label> {getAuthor(info.id).lastname} <p />
-      <label class="App-view-item">GENRE: </label> {getGenreById(getAuthor(info.id).genrelist[0].id).name}
-      <p />
-      <a class="App-a-click" onClick={refBack}>Back</a>
-    </article>
-  )
+    return (
+        <article>
+            <p className="App-view-item">AUTHOR VIEW:</p>
+            <label className="App-view-item">ID: </label> {info.id} <p/>
+            <label className="App-view-item">FIRSTNAME: </label> {author.firstName} <p/>
+            <label className="App-view-item">SURNAME: </label> {author.surName} <p/>
+            <label className="App-view-item">LASTNAME: </label> {author.lastName} <p/>
+            <label classMName="App-view-item">GENRE: </label> {genre.name}
+            <p/>
+            <a className="App-a-click" onClick={refBack}>Back</a>
+        </article>
+    )
 }
 
 export default AuthorView;

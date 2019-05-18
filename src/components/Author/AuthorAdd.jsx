@@ -1,96 +1,111 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
-import { GenreFakeInfo } from '../FakeInfo';
+import React, {useEffect, useState} from 'react';
 import '../../App.css';
 
 
-const AuthorAdd = ({ history }) => {
+const AuthorAdd = ({history}) => {
 
-  // form
-  const [firstname, setFirstName] = useState(null);
-  const [surname, setSurName] = useState(null);
-  const [lastname, setLastName] = useState(null);
-  const [genre, setGenre] = useState(null);
-  //
-  const [genres, setGenres] = useState([]);
+    // form
+    const [firstname, setFirstName] = useState(null);
+    const [surname, setSurName] = useState(null);
+    const [lastname, setLastName] = useState(null);
+    const [genre, setGenre] = useState([]);
+    //
+    const [genres, setGenres] = useState([]);
 
-  //
-  const getGenres = () => {
-    return GenreFakeInfo;
-  }
+    //
+    useEffect(() => {
+        // fake
+        //setGenres(GenreFakeInfo);
+        // real
+        fetch('http://localhost:8080/genre/list')
+            .then(res => res.json())
+            .then(data => {
+                setGenres(data);
+            })
+    }, []);
 
-  useEffect(() => {
-    setGenres(getGenres());
-  })
 
-  //
-  const handleChangeFirstName = e => {
-    setFirstName(e.target.value);
-  }
+    //
+    const handleChangeFirstName = e => {
+        setFirstName(e.target.value);
+    }
 
-  const handleChangeSurName = e => {
-    setSurName(e.target.value);
-  }
+    const handleChangeSurName = e => {
+        setSurName(e.target.value);
+    }
 
-  const handleChangeLastName = e => {
-    setLastName(e.target.value);
-  }
+    const handleChangeLastName = e => {
+        setLastName(e.target.value);
+    }
 
-  const handleChangeGenre = e => {
-    setGenre(e.target.value);
-  }
+    const handleChangeGenre = e => {
+        console.log("!!!!!!!!!!!!!!!"+e.target.value);
+        setGenre(e.target.value);
+    }
 
-  const handleSubmit = e => {
-    e.preventDefault();
+    const handleCancel = e => {
+        history.push("/author");
+    }
 
-    let url = 'http://localhost:8080/author/add';
 
-    let data = "";
-    data = data.concat('firstname=', firstname);
-    data = data.concat('&surname=', surname);
-    data = data.concat('&lastname=', lastname);
-    data = data.concat('&genre=', genre);
+    const handleSubmit = e => {
 
-    fetch(url, {
-      method: 'post',
-      headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      body: data,
-    })
-      .then(res => res.json())
-      .then(data => {
-        //setItems(data);
-      })
-    history.push("/author");
-  }
+        e.preventDefault();
 
-  return (
-    <form id="add-genre-form" method="post" onSubmit={handleSubmit}>
-      <label>
-        Firstame: <input type="text" name="firstname" onChange={handleChangeFirstName} />
-      </label>
-      <p />
-      <label>
-        Surname: <input type="text" name="surname" onChange={handleChangeSurName} />
-      </label>
-      <p />
-      <label>
-        Lastame: <input type="text" name="lastname" onChange={handleChangeLastName} />
-      </label>
-      <p />
-      <p>
-        <select name="genre" onChange={handleChangeGenre}>
-          {
-            genres.map(p => (
-              <option value={p.id}>{p.name}</option>
-            ))
-          }
-        </select>
-      </p>
-      <p />
-      <p><input type="submit" value="Save" /></p>
-    </form>
+        const url = 'http://localhost:8080/author/add';
 
-  )
+        let data = JSON.stringify({
+            'firstName': firstname,
+            'surName': surname,
+            'lastName': lastname,
+            'genreList': [{'id': genre}]
+        });
+
+        fetch(url, {
+            method: 'post',
+            headers: {"Content-type": "application/json"},
+            body: data
+        })
+            .then(res => res.json())
+            .then(data => {
+                history.push("/author");
+            })
+            .catch(err => {
+                console.log(">>>>>>>>> "+err);
+            })
+
+    }
+
+    return (
+        <form id="add-genre-form" method="post" onSubmit={handleSubmit}>
+            <label>
+                Firstame: <input type="text" name="firstname" onChange={handleChangeFirstName}/>
+            </label>
+            <p/>
+            <label>
+                Surname: <input type="text" name="surname" onChange={handleChangeSurName}/>
+            </label>
+            <p/>
+            <label>
+                Lastname: <input type="text" name="lastname" onChange={handleChangeLastName}/>
+            </label>
+            <p/>
+            <p>
+                <select multiple name="genre[]"  onChange={handleChangeGenre}>
+                    {
+                        genres.map(p => (
+                            <option key={p.id} value={p.id}>{p.name}</option>
+                        ))
+                    }
+                </select>
+            </p>
+            <p/>
+            <p>
+                <input type="submit" value="Save"/> <input type="button" value="Cancel" onClick={handleCancel}/>
+            </p>
+        </form>
+
+    )
 }
 
 export default AuthorAdd;

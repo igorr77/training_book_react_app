@@ -1,40 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../App.css';
-import { AuthorFakeInfo, GenreFakeInfo, findById } from '../FakeInfo';
+import {AuthorFakeInfo, BookFakeInfo, findById, GenreFakeInfo} from '../FakeInfo';
 
 
+const BookView = ({info, history}) => {
 
-const AuthorView = ({ info, history }) => {
-
-  // fake info
-  const getFakeAuthor = (id) => {
-    return findById(AuthorFakeInfo,id);
-  }
+    const [book, setBook] = useState({});
 
 
-  //
+    // fake info
+    const getFakeBook = (id) => {
+        return findById(BookFakeInfo, id);
+    }
 
-  const getGenreById = (id) => {
-    return findById(GenreFakeInfo, id);
-  }
+
+    //
+    const getAuthor = (id) => {
+        return findById(AuthorFakeInfo, id);
+    }
+
+    const getAuthorList = (book) => {
+
+        if (book.authorList == null) {
+            return;
+        }
+
+        let authorList = "";
+
+        for (let i = 0; i < book.authorList.length; i++) {
+            let author = getAuthor(book.authorList[i].id);
+            if (authorList != "") authorList = authorList.concat(", ");
+            authorList = authorList.concat(author.lastname, " ", author.firstname);
+        }
+        return authorList;
+    }
+
+    const getGenre = (id) => {
+        return findById(GenreFakeInfo, id).name;
+    }
 
 
-  const getAuthor = (id) => {
-    return getFakeAuthor(id);
-  }
+    const getBook = (id) => {
+        return getFakeBook(id);
+    }
 
-  //<p>GENRE:{getGenreById(getAuthor(info.id).genrelist[0].id)}</p>
 
-  return (
-    <article>
-      <p>VIEW:</p>
-      <p>ID: {info.id}</p>
-      <label class="App-view-item">FIRSTNAME: </label> {getAuthor(info.id).firstname} <p />
-      <label class="App-view-item">SURNAME: </label> {getAuthor(info.id).surname} <p />
-      <label class="App-view-item">LASTNAME: </label> {getAuthor(info.id).lastname} <p />
-      <label class="App-view-item">GENRE: </label> {getGenreById(getAuthor(info.id).genrelist[0].id).name}
-    </article>
-  )
+    const refGoBack = () => {
+        history.goBack();
+    }
+
+
+    useEffect(() => {
+        setBook(getBook(info.id));
+    });
+
+
+    return (
+        <article>
+            <p class="App-view-item">BOOK VIEW:</p>
+            <label class="App-view-item">ID: </label> {book.id}<p/>
+            <label class="App-view-item">TITLE: </label> {book.title} <p/>
+            <label class="App-view-item">AUTHOR: </label> {getAuthorList(book)} <p/>
+            <label class="App-view-item">GENRE: </label> {book.genre} <p/>
+            <label class="App-view-item">DESCRIPTION: </label> {book.description} <p/>
+
+            <p/>
+            <a onClick={refGoBack}>Back</a>
+        </article>
+    )
 }
 
-export default AuthorView;
+export default BookView;

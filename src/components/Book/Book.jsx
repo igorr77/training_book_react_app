@@ -8,9 +8,7 @@ const Book = ({history, match:{params}}) => {
   return (
     <article>
       {params.id === "0" && <BookAdd history={history}/>}
-      {params.id != "0" && <BookView info={params} history={history}/>}
-      <p />
-      <Link to='/book'>Back</Link>
+      {params.id !== "0" && <BookView info={params} history={history}/>}
     </article>
   )
 }

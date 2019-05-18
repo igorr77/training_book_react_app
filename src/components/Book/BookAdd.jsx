@@ -1,96 +1,112 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
-import { GenreFakeInfo } from '../FakeInfo';
+import React, {useEffect, useState} from 'react';
+import {AuthorFakeInfo, GenreFakeInfo} from '../FakeInfo';
 import '../../App.css';
 
 
-const BookAdd = ({ history }) => {
+const BookAdd = ({history}) => {
 
-  // form
-  const [firstname, setFirstName] = useState(null);
-  const [surname, setSurName] = useState(null);
-  const [lastname, setLastName] = useState(null);
-  const [genre, setGenre] = useState(null);
-  //
-  const [genres, setGenres] = useState([]);
+    // list
+    const [genres, setGenres] = useState([]);
+    const [authors, setAuthors] = useState([]);
 
-  //
-  const getGenres = () => {
-    return GenreFakeInfo;
-  }
+    // form
+    const [title, setTitle] = useState(null);
+    const [author, setAuthor] = useState(null);
+    const [genre, setGenre] = useState(null);
+    const [description, setDescription] = useState(null);
+    //
 
-  useEffect(() => {
-    setGenres(getGenres());
-  })
 
-  //
-  const handleChangeFirstName = e => {
-    setFirstName(e.target.value);
-  }
+    //
+    const getGenres = () => {
+        return GenreFakeInfo;
+    }
 
-  const handleChangeSurName = e => {
-    setSurName(e.target.value);
-  }
+    const getAuthors = () => {
+        return AuthorFakeInfo;
+    }
 
-  const handleChangeLastName = e => {
-    setLastName(e.target.value);
-  }
-
-  const handleChangeGenre = e => {
-    setGenre(e.target.value);
-  }
-
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    let url = 'http://localhost:8080/book/add';
-
-    let data = "";
-    data = data.concat('firstname=', firstname);
-    data = data.concat('&surname=', surname);
-    data = data.concat('&lastname=', lastname);
-    data = data.concat('&genre=', genre);
-
-    fetch(url, {
-      method: 'post',
-      headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      body: data,
+    useEffect(() => {
+        setGenres(getGenres());
+        setAuthors(getAuthors());
     })
-      .then(res => res.json())
-      .then(data => {
-        //setItems(data);
-      })
-    history.push("/book");
-  }
 
-  return (
-    <form id="add-book-form" method="post" onSubmit={handleSubmit}>
-      <label>
-        Firstame: <input type="text" name="firstname" onChange={handleChangeFirstName} />
-      </label>
-      <p />
-      <label>
-        Surname: <input type="text" name="surname" onChange={handleChangeSurName} />
-      </label>
-      <p />
-      <label>
-        Lastame: <input type="text" name="lastname" onChange={handleChangeLastName} />
-      </label>
-      <p />
-      <p>
-        <select name="genre" onChange={handleChangeGenre}>
-          {
-            genres.map(p => (
-              <option value={p.id}>{p.name}</option>
-            ))
-          }
-        </select>
-      </p>
-      <p />
-      <p><input type="submit" value="Save" /></p>
-    </form>
+    //
+    const handleChangeTitle = e => {
+        setTitle(e.target.value);
+    }
 
-  )
+    const handleChangeAuthor = e => {
+        setAuthor(e.target.value);
+    }
+
+    const handleChangeGenre = e => {
+        setGenre(e.target.value);
+    }
+
+    const handleChangeDescription = e => {
+        setDescription(e.target.value);
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        let url = 'http://localhost:8080/book/add';
+
+        let data = "";
+        data = data.concat('title=', title);
+        data = data.concat('&author=', author);
+        data = data.concat('&genre=', genre);
+        data = data.concat('&description=', description);
+
+        fetch(url, {
+            method: 'post',
+            headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
+            body: data,
+        })
+            .then(res => res.json())
+            .then(data => {
+                //setItems(data);
+            })
+        history.push("/book");
+    }
+
+    const handleCancel = e => {
+        history.push("/book");
+    }
+
+    return (
+        <form id="add-book-form" method="post" onSubmit={handleSubmit}>
+            <label class="App-view-item">TITLE: </label>
+            <input type="text" name="title" onChange={handleChangeTitle}/>
+            <p/>
+            <label className="App-view-item">AUTHOR: </label>
+            <select name="author" onChange={handleChangeAuthor}>
+                {
+                    authors.map(p => (
+                        <option value={p.id}>{p.lastname + " " + p.firstname}</option>
+                    ))
+                }
+            </select>
+            <p/>
+            <label className="App-view-item">GENRE: :</label>
+            <select name="genre" onChange={handleChangeGenre}>
+                {
+                    genres.map(p => (
+                        <option value={p.id}>{p.name}</option>
+                    ))
+                }
+            </select>
+            <p/>
+            <label className="App-view-item">DESCRIPTION: :</label>
+            <input type="text" name="genre" onChange={handleChangeDescription}/>
+            <p/>
+            <p>
+                <input type="submit" value="Save"/> <input type="button" value="Cancel" onClick={handleCancel}/>
+            </p>
+        </form>
+
+    )
 }
 
 export default BookAdd;

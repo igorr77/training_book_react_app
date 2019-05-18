@@ -14,6 +14,4 @@ const Books = () => (
   </section>
 )
 
-// <!--Link to={'/genre/${p.id}'}>{p.name}</Link-->
-
 export default Books;
